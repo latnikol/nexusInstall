@@ -14,9 +14,8 @@ fi
 # Устанавливаем переменную окружения для отключения интерактивных запросов
 export DEBIAN_FRONTEND=noninteractive
 
-# Устанавливаем значения для debconf, чтобы подавить запросы
+# Подавляем вопросы debconf
 echo "debconf debconf/frontend select Noninteractive" | sudo debconf-set-selections
-echo "postgresql postgresql/enable_upgrade_prompt boolean false" | sudo debconf-set-selections
 
 echo "🔄 Обновление системы..."
 sudo apt update && sudo apt upgrade -y
@@ -43,15 +42,23 @@ export PATH="$HOME/.local/bin:$PATH"
 
 echo "✅ Установка завершена! Перезапустите терминал или выполните 'source ~/.bashrc' для обновления окружения."
 
-# ✅ Запуск tmux сессии "nexus" автоматически после завершения установки
+# ✅ Запуск tmux-сессии "nexus"
 echo "🚀 Запуск tmux-сессии 'nexus'..."
 tmux new-session -d -s nexus  # Запускаем tmux в фоне
 
-# Ждём немного, чтобы tmux сессия успела запуститься
-sleep 1
+# Ждём немного, чтобы tmux полностью запустился
+sleep 2
 
-# Отправляем команду на создание swap-файла в tmux
+# Отправляем команду на создание swap-файла
 tmux send-keys -t nexus "sudo dd if=/dev/zero of=/swapfile bs=1M count=8192 && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile && echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab" C-m
 
-# ✅ Запуск tmux-сессии для пользователя (если нужно оставить tmux открытую сессию)
+# Ждём завершения swap-команды
+sleep 15
+
+# Отправляем команду установки Nexus CLI и автоматический ответ "y"
+tmux send-keys -t nexus "curl https://cli.nexus.xyz/ | sh" C-m
+sleep 3
+tmux send-keys -t nexus "y" C-m
+
+# ✅ Оставляем открытую сессию tmux
 tmux attach -t nexus
