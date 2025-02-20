@@ -18,7 +18,7 @@ fi
 
 
 echo "🔄 Обновление системы..."
-sudo apt update -y && sudo apt upgrade -y
+sudo apt update && sudo apt upgrade -y
 
 echo "🦀 Установка Rust..."
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --no-modify-path -y
