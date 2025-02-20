@@ -2,6 +2,12 @@
 
 set -e  # Остановит выполнение при ошибке
 
+# Устанавливаем переменную окружения для отключения интерактивных запросов
+export DEBIAN_FRONTEND=noninteractive
+
+# Подавляем вопросы debconf
+echo "debconf debconf/frontend select Noninteractive" | sudo debconf-set-selections
+
 # Проверяем, установлен ли expect
 if ! command -v expect &> /dev/null; then
     echo "🔧 Expect не найден. Устанавливаем..."
@@ -9,12 +15,6 @@ if ! command -v expect &> /dev/null; then
 else
     echo "✅ Expect уже установлен."
 fi
-
-# Устанавливаем переменную окружения для отключения интерактивных запросов
-export DEBIAN_FRONTEND=noninteractive
-
-# Подавляем вопросы debconf
-echo "debconf debconf/frontend select Noninteractive" | sudo debconf-set-selections
 
 echo "🔄 Обновление системы..."
 sudo apt update && sudo apt upgrade -y
