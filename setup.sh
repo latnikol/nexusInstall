@@ -5,7 +5,6 @@ set -e  # Остановит выполнение при ошибке
 # Проверяем, установлен ли expect
 if ! command -v expect &> /dev/null; then
     echo "🔧 Expect не найден. Устанавливаем..."
-    sudo apt-get update
     sudo apt-get install -y expect
 else
     echo "✅ Expect уже установлен."
