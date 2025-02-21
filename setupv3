@@ -51,7 +51,7 @@ tmux new-session -d -s nexus  # Запускаем tmux в фоне
 sleep 2
 
 # Используем tmux wait-for для ожидания завершения swap-команды
-tmux send-keys -t nexus "sudo dd if=/dev/zero of=/swapfile bs=1M count=8192 && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile && echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab; tmux wait-for -S swap_done" C-m
+tmux send-keys -t nexus "sudo dd if=/dev/zero of=/swapfile bs=1M count=10240 && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile && echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab; tmux wait-for -S swap_done" C-m
 
 # Ждём завершения команды swap
 tmux wait-for swap_done
